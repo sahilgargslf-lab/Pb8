@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday Palak 🎂</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  margin: 0;
+  background: #fff3f6;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  text-align: center;
+  color: #444;
+}
+
+h1 { margin-top: 40px; }
+p { margin: 12px 20px; }
+
+button {
+  padding: 16px 34px;
+  font-size: 16px;
+  border: none;
+  border-radius: 30px;
+  background: #ff8fab;
+  color: white;
+  margin-top: 24px;
+  transition: transform 0.15s ease;
+}
+button:active {
+  transform: scale(0.96);
+}
+
+.section {
+  transition: opacity 0.6s ease;
+}
+
+.hidden {
+  display: none;
+  opacity: 0;
+}
+
+/* Cake */
+#cake {
+  margin: 30px auto;
+}
+
+#candles {
+  font-size: 42px;
+  margin-bottom: 6px;
+  animation: flicker 1.6s infinite alternate;
+  transition: opacity 0.6s ease;
+}
+
+@keyframes flicker {
+  0% { opacity: 1; }
+  50% { opacity: 0.85; }
+  100% { opacity: 1; }
+}
+
+.cake-emoji {
+  font-size: 90px;
+  filter: drop-shadow(0 10px 22px rgba(255,120,160,0.45));
+}
+
+/* Photo */
+img {
+  width: 220px;
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(255,120,160,0.4);
+}
+
+/* Bouquet */
+#bouquet {
+  font-size: 90px;
+  animation: zoomIn 0.8s ease forwards;
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music">
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<!-- STEP 1 -->
+<div id="step1" class="section">
+  <h1>Palak 🌸</h1>
+  <p>Tap the button twice to blow the candles 🎂</p>
+
+  <div id="cake">
+    <div id="candles">🕯️ 🕯️</div>
+    <div class="cake-emoji">🎂</div>
+  </div>
+
+  <button onclick="blow()">Tap to blow 🎈</button>
+</div>
+
+<!-- STEP 2 -->
+<div id="step2" class="section hidden">
+  <h1>Happy 23rd Birthday, Palak 🎉</h1>
+  <img src="palak.jpg">
+
+  <p>
+    May this year be gentle with you,<br>
+    kind to your heart,<br>
+    and full of little smiles 🌷
+  </p>
+
+  <button onclick="showSurprise()">Tap for surprise 🎁</button>
+</div>
+
+<!-- STEP 3 -->
+<div id="step3" class="section hidden">
+  <div id="bouquet">💐💐💐💐</div>
+  <p>A small bouquet for a special day 💖</p>
+</div>
+
+<script>
+let taps = 0;
+const music = document.getElementById("music");
+
+function vibrate(ms) {
+  if (navigator.vibrate) navigator.vibrate(ms);
+}
+
+// Smooth music fade
+function fadeMusic(targetVolume, duration = 600) {
+  const step = (targetVolume - music.volume) / (duration / 50);
+  const fade = setInterval(() => {
+    music.volume = Math.min(Math.max(music.volume + step, 0), 1);
+    if (
+      (step > 0 && music.volume >= targetVolume) ||
+      (step < 0 && music.volume <= targetVolume)
+    ) clearInterval(fade);
+  }, 50);
+}
+
+function blow() {
+  taps++;
+  vibrate(40);
+
+  // Start music safely on first interaction
+  if (music.paused) {
+    music.volume = 0;
+    music.play().catch(()=>{});
+    fadeMusic(0.6);
+  }
+
+  if (taps === 1) {
+    document.getElementById("candles").style.opacity = "0.5";
+  }
+
+  if (taps === 2) {
+    document.getElementById("candles").style.opacity = "0.1";
+    document.getElementById("candles").style.animation = "none";
+    vibrate([60,40,60]);
+
+    fadeMusic(0.2);
+
+    setTimeout(() => {
+      document.getElementById("step1").classList.add("hidden");
+      document.getElementById("step2").classList.remove("hidden");
+    }, 600);
+  }
+}
+
+function showSurprise() {
+  vibrate([50,30,50]);
+  fadeMusic(0);
+
+  document.getElementById("step2").classList.add("hidden");
+  document.getElementById("step3").classList.remove("hidden");
+}
+</script>
+
+</body>
+</html>
